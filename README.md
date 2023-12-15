@@ -13,3 +13,7 @@ Start by running `npm install` inside the project folder
 `npm run eslint` to run eslint
 `npm run build` to make a production build
 `npm run start-prod` to run your production build
+
+## I had to change this line in package.json file:
+"test:e2e": "cypress open" into this: "test:e2e": "npx cypress run"
+Without it it didn't run test in CI (it's hanging)
