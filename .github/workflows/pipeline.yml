@@ -27,3 +27,4 @@ jobs:
             command: npm run test:e2e           
             browser: chrome
             wait-on: 'http://localhost:5000'
+            headless: true
