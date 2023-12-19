@@ -3,7 +3,7 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - main
+      - test
 jobs:
   build_and_test:
     runs-on: ubuntu-20.04
