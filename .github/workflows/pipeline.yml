@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  simple_deployment_pipeline:
+  build_and_test:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -26,10 +26,12 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
-    deploy:
+  deploy_to_production:
+    runs-on: ubuntu-20.04
+    needs: build_and_test
+    steps:
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
-          api-key: ${{ secrets.MY_RENDER_API_KEY }}
-          wait-for-success: true        
+          api-key: ${{ secrets.MY_RENDER_API_KEY }}       
