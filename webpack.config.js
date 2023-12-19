@@ -1,5 +1,5 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const path = require('path');
+const HtmlWebPackPlugin = require("html-webpack-plugin")
+const path = require('path')
 
 module.exports = {
   entry: "./src/index.jsx",
@@ -35,6 +35,7 @@ module.exports = {
     extensions: ["*", ".js", ".jsx"],
   },
   devServer: {
+    port: 3000, // Specify the port you want to use
     historyApiFallback: true,
   },
   plugins: [
@@ -43,4 +44,4 @@ module.exports = {
       filename: "./index.html",
     }),
   ],
-};
+}
