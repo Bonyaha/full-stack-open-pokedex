@@ -18,4 +18,4 @@ Start by running `npm install` inside the project folder
 "test:e2e": "cypress open" into this: "test:e2e": "npx cypress run"
 Without it it didn't run test in CI (it's hanging)
 
-Had to created a file *build_step.sh* for starting app in Render. 
+Had to created a file *build_step.sh* for starting app in Render.
