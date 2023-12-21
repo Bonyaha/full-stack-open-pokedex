@@ -25,4 +25,3 @@ Also I kept the command for e2e tests running locally, but slightly changed it: 
 
 - Had to created a file *build_step.sh* for starting app in Render.
 Test#8
-Test#8
