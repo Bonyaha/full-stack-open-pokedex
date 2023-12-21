@@ -23,4 +23,6 @@ Start by running `npm install` inside the project folder
 Without this change, it didn't run test in CI (it's hanging)
 Also I kept the command for e2e tests running locally, but slightly changed it: "test:e2e:open": "cypress open"
 
+
 - Had to created a file *build_step.sh* for starting app in Render.
+Test
