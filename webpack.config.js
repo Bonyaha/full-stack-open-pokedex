@@ -35,7 +35,7 @@ module.exports = {
     extensions: ["*", ".js", ".jsx"],
   },
   devServer: {
-    port: 3000, // Specify the port you want to use
+    port: 3000,
     historyApiFallback: true,
   },
   plugins: [
