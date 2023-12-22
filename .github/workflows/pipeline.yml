@@ -38,7 +38,8 @@ jobs:
         run: echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
 
       - name: Deploy to production
-        run: echo "Commit message: $COMMIT_MESSAGE"
+        run: |
+        echo "Commit message: $COMMIT_MESSAGE"
         uses: johnbeynon/render-deploy-action@v0.0.8
         if: ${{ github.event_name == 'push'}}
         with:
