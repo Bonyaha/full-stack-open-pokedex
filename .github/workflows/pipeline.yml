@@ -32,10 +32,25 @@ jobs:
   deploy_to_production:
     runs-on: ubuntu-20.04
     needs: build_and_test
-    if: ${{ github.event_name == 'push' }}
+    
     steps:
+      - name: EVENT_NAME
+        run: echo "${{ github.event_name}}"
+
+      - name: Set commit message as an environment variable
+        run: echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
+
+      - name: Check commit message and deploy
+        run: |
+          echo "Commit message: $COMMIT_MESSAGE"
+
+      - name: Check condition
+        run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
+
+
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
+        if: ${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}
         with:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
