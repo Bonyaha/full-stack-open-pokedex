@@ -43,7 +43,6 @@ jobs:
       - name: Check commit message and deploy
         run: |
           echo "Commit message: $COMMIT_MESSAGE"
-          
 
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
