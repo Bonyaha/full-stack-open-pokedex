@@ -37,9 +37,10 @@ jobs:
       - name: Set commit message as an environment variable
         run: echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
 
-      - name: Deploy to production
+      - name: Check commit message and deploy
         run: |
-        echo "Commit message: $COMMIT_MESSAGE"
+          echo "Commit message: $COMMIT_MESSAGE"
+      - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         if: ${{ github.event_name == 'push'}}
         with:
