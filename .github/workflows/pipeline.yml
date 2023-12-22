@@ -34,7 +34,7 @@ jobs:
     needs: build_and_test
     
     steps:
-        - name: Set commit message as an environment variable
+      - name: Set commit message as an environment variable
         run: echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
 
       - name: Check commit message and deploy
@@ -43,7 +43,7 @@ jobs:
 
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
-        
+
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         if: ${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}
