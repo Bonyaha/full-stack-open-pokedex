@@ -42,7 +42,7 @@ jobs:
           echo "Commit message: $COMMIT_MESSAGE"
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
-        if: ${{ github.event_name == 'push'}}
+        if: ${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}
         with:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
