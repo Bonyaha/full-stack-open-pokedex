@@ -43,6 +43,7 @@ jobs:
 
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
+        
 
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
