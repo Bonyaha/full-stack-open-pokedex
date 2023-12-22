@@ -47,10 +47,10 @@ jobs:
         run: echo "$COMMIT_MESSAGES"
 
         
-      - name: Set commit message as an environment variable    and echo it
-        env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message | replace('\n', ' ') }}
-        run: echo "$COMMIT_MESSAGE"
+      - name: Set commit message as an environment variable
+        run: |
+            COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | tr '\n' ' ')
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
 
 
       - name: Check commit message and deploy
