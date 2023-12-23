@@ -74,12 +74,10 @@ jobs:
   tag_release:    
     runs-on: ubuntu-20.04
     needs: deploy_to_production
-    steps:
-      - env: 
-          COMMIT_MESSAGE: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}
-        run: |
-          echo "Commit message: $COMMIT_MESSAGE"
+    env:
+    COMMIT_MESSAGE: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}
 
+    steps:
       - name: commit messages
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
