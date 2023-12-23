@@ -3,7 +3,7 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - main
+      - test
   pull_request:
     branches: [main] 
     types: [opened, synchronize]
@@ -84,6 +84,10 @@ jobs:
           COMMIT_MESSAGE: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}
         run: |
           echo "Commit message: $COMMIT_MESSAGE"
+      - name: Test env
+        run: |
+          echo "env.COMMIT_MESSAGE" 
+            
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
         
