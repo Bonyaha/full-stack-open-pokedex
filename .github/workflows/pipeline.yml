@@ -86,8 +86,8 @@ jobs:
           echo "Commit message: $COMMIT_MESSAGE"
       - name: Test env
         run: |
-          echo "env.COMMIT_MESSAGE" 
-            
+          echo "$COMMIT_MESSAGE" 
+
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
         
