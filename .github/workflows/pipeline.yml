@@ -3,7 +3,7 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - test
+      - main
   pull_request:
     branches: [main] 
     types: [opened, synchronize]
@@ -32,8 +32,6 @@ jobs:
   deploy_to_production:
     runs-on: ubuntu-20.04
     needs: build_and_test
-    env:
-      COMMIT_MESSAGE: $(echo "${{ github.event.head_commit.message }}" | tr '\n' ' ')
     outputs:
       COMMIT_MESSAGE: ${{ steps.set_commit_message.outputs.COMMIT_MESSAGE }}
 
@@ -54,6 +52,8 @@ jobs:
       - name: Set commit message as an environment variable
         id: set_commit_message
         run: |
+          COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | tr '\n' ' ')
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> "$GITHUB_OUTPUT"
 
 
@@ -71,8 +71,7 @@ jobs:
         with:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
-
-
+          
   tag_release:    
     runs-on: ubuntu-20.04
     needs: deploy_to_production
