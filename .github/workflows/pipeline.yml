@@ -75,8 +75,12 @@ jobs:
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
+      - name: Check commit message and deploy
+        run: |
+          echo "Commit message: $COMMIT_MESSAGE"
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
+        
 
       - uses: actions/checkout@v3
       - name: Bump version and push tag       
