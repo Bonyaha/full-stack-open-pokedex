@@ -85,7 +85,7 @@ jobs:
         run: |
           echo "Commit message: $COMMIT_MESSAGE"
       - name: Check condition
-        run: echo "${{ github.event_name == 'push' && contains($COMMIT_MESSAGE, '#skip') != true}}"
+        run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
         
 
       - uses: actions/checkout@v3
