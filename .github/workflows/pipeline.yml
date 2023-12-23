@@ -71,6 +71,13 @@ jobs:
     runs-on: ubuntu-20.04
     needs: deploy_to_production
     steps:
+      - name: commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+        run: echo "$COMMIT_MESSAGES"
+      - name: Check condition
+        run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
+
       - uses: actions/checkout@v3
       - name: Bump version and push tag       
         uses: anothrNick/github-tag-action@72cc9b65fd4cdd0de63b8dd7c098e1741ae0951a
