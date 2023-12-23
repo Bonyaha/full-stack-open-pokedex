@@ -80,7 +80,8 @@ jobs:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: Check commit message and deploy
-        env: COMMIT_MESSAGE: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}
+        env: 
+          COMMIT_MESSAGE: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}
         run: |
           echo "Commit message: $COMMIT_MESSAGE"
       - name: Check condition
