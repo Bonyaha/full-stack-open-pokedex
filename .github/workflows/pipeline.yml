@@ -54,6 +54,7 @@ jobs:
         run: |
           COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | tr '\n' ' ')
           echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> "$GITHUB_OUTPUT"
 
 
       - name: Check commit message and deploy
@@ -79,8 +80,10 @@ jobs:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: Check commit message and deploy
+        env: 
+          COMMIT_MESSAGE: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}
         run: |
-          echo "Commit message: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}"
+          echo "Commit message: $COMMIT_MESSAGE"
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
         
