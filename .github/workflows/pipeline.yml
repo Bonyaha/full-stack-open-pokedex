@@ -62,7 +62,7 @@ jobs:
         if: success()
         with:
           severity: info          
-          description: to https://pokemon-app-4lxo.onrender.com/ by ${{github.triggering_actor)}}
+          description: to https://pokemon-app-4lxo.onrender.com/ by ${{github.triggering_actor}}
           text: A new version of Pokedex deployed!          
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
