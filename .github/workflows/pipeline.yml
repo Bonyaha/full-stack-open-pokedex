@@ -11,6 +11,17 @@ jobs:
   build_and_test:
     runs-on: ubuntu-20.04
     steps:
+      - name: Notify on Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: |
+            commit
+            [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+            by ${{ github.actor }} broke the build :(
+          text: Build failed            
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -75,7 +86,9 @@ jobs:
         with:
           severity: error
           description: |
-            Commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) by ${{ github.actor }} broke the build :(
+            commit
+            [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+            by ${{ github.actor }} broke the build :(
           text: Build failed            
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
