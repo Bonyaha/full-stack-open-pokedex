@@ -29,45 +29,30 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
+
   deploy_to_production:
     runs-on: ubuntu-20.04
     needs: build_and_test
-    outputs:
-      COMMIT_MESSAGE: ${{ steps.set_commit_message.outputs.COMMIT_MESSAGE }}
-
+    
     steps:
       - name: EVENT_NAME
         run: echo "${{ github.event_name}}"
-
-      - name: commits
+      - name: COMMITS
         env:
           COMMITS: ${{ toJson(github.event.commits) }}
         run: echo "$COMMITS"
-      - name: commit messages
+      - name: COMMIT_MESSAGES
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
 
         
-      - name: Set commit message as an environment variable
-        id: set_commit_message
-        run: |
-          COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | tr '\n' ' ')
-          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> "$GITHUB_OUTPUT"
-
-
-      - name: Check commit message and deploy
-        run: |
-          echo "Commit message: $COMMIT_MESSAGE"
-
       - name: Check condition
-        run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
-
-
+        run: echo "${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}"
+      
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
-        if: ${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         with:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
@@ -75,22 +60,12 @@ jobs:
   tag_release:    
     runs-on: ubuntu-20.04
     needs: deploy_to_production
-    env:
-      COMMIT_MESSAGE: ${{ needs.deploy_to_production.outputs.COMMIT_MESSAGE }}
-
+    
     steps:
-      - name: Test env
-        run: |
-          echo "$COMMIT_MESSAGE" 
-
-      - name: Check condition
-        run: echo "${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}"
-        
-
       - uses: actions/checkout@v3
       - name: Bump version and push tag       
         uses: anothrNick/github-tag-action@72cc9b65fd4cdd0de63b8dd7c098e1741ae0951a
-        if: ${{ github.event_name == 'push' && contains(env.COMMIT_MESSAGE, '#skip') != true}}
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             DEFAULT_BUMP: patch
