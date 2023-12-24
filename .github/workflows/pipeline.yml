@@ -62,7 +62,7 @@ jobs:
         if: success()
         with:
           severity: info          
-          description: Deployment Succeeded!
+          details: to https://pokemon-app-4lxo.onrender.com/ by ${{toJson(github.event.head_commit.author.username)}}
           text: A new version of Pokedex deployed!
           footer: Triggered by ${{ github.triggering_actor }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
