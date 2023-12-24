@@ -20,7 +20,7 @@ jobs:
           severity: error
           description: |
             commit
-            [${{ github.sha }}(${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})]
+            ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
             by ${{ github.actor }} broke the build :(
           text: Build failed            
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
