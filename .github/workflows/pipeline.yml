@@ -3,7 +3,7 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - main
+      - test
   pull_request:
     branches: [main] 
     types: [opened, synchronize]
@@ -56,6 +56,28 @@ jobs:
         with:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
+
+      - name: Notify on Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          details: Deployment Succeeded!
+          footer: Triggered by ${{ github.triggering_actor }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Notify on Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: Pipeline failed for commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}).
+          footer: Triggered by ${{ github.triggering_actor }}
+            
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+
+
           
   tag_release:    
     runs-on: ubuntu-20.04
