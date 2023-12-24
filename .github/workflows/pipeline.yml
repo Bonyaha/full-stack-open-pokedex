@@ -81,14 +81,10 @@ jobs:
             by ${{ github.actor }} broke the deployment :(
           text: Build failed            
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
-
-
           
   tag_release:    
     runs-on: ubuntu-20.04
-    needs: deploy_to_production
-    
+    needs: deploy_to_production    
     steps:
       - uses: actions/checkout@v3
       - name: Bump version and push tag       
