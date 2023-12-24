@@ -62,7 +62,7 @@ jobs:
         if: success()
         with:
           severity: info
-          details: Deployment Succeeded!
+          description:: Deployment Succeeded!
           footer: Triggered by ${{ github.triggering_actor }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
