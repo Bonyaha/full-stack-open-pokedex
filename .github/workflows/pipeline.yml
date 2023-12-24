@@ -3,7 +3,7 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - test
+      - main
   pull_request:
     branches: [main] 
     types: [opened, synchronize]
@@ -50,7 +50,6 @@ jobs:
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
-
         
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}"
@@ -68,7 +67,7 @@ jobs:
         with:
           severity: info          
           description: to https://pokemon-app-4lxo.onrender.com/ by ${{github.triggering_actor}}
-          text: A new version of Pokedex deployed!          
+          text: A new version of Pokedex deployed         
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Notify on Failure
@@ -79,7 +78,7 @@ jobs:
           description: |
             commit
             ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
-            by ${{ github.actor }} broke the build :(
+            by ${{ github.actor }} broke the deployment :(
           text: Build failed            
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
