@@ -35,6 +35,9 @@ jobs:
     needs: build_and_test
     
     steps:
+      - name: Simulate Failure Step
+        run: exit 1
+        
       - name: EVENT_NAME
         run: echo "${{ github.event_name}}"
       - name: COMMITS
@@ -71,9 +74,8 @@ jobs:
         if: failure()
         with:
           severity: error
-          description: Pipeline failed for commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}).
-          footer: Triggered by ${{ github.triggering_actor }}
-            
+          description: commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) by ${{github.triggering_actor}} broke the build :(          
+          text: Build failed            
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
 
