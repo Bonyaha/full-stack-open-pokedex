@@ -30,22 +30,26 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
 
+      - name: Notify on Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: |
+            commit
+            ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+            by ${{ github.actor }} broke the build :(
+          text: Build failed            
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
   deploy_to_production:
     runs-on: ubuntu-20.04
-    needs: build_and_test
-    
+    needs: build_and_test    
     steps:
-      - name: EVENT_NAME
-        run: echo "${{ github.event_name}}"
-      - name: COMMITS
-        env:
-          COMMITS: ${{ toJson(github.event.commits) }}
-        run: echo "$COMMITS"
       - name: COMMIT_MESSAGES
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
-
         
       - name: Check condition
         run: echo "${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}"
@@ -56,6 +60,30 @@ jobs:
         with:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
+
+      - name: Notify on Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info          
+          description: to https://pokemon-app-4lxo.onrender.com/ by ${{github.triggering_actor}}
+          text: A new version of Pokedex deployed         
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Notify on Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: |
+            commit
+            ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+            by ${{ github.actor }} broke the deployment :(
+          text: Build failed            
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+
+
           
   tag_release:    
     runs-on: ubuntu-20.04
