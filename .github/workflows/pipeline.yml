@@ -11,19 +11,6 @@ jobs:
   build_and_test:
     runs-on: ubuntu-20.04
     steps:
-      - name: Simulate Failure Step
-        run: exit 1
-      - name: Notify on Failure
-        uses: rjstone/discord-webhook-notify@v1
-        if: failure()
-        with:
-          severity: error
-          description: |
-            commit
-            ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
-            by ${{ github.actor }} broke the build :(
-          text: Build failed            
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -43,10 +30,21 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
 
+      - name: Notify on Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: |
+            commit
+            ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+            by ${{ github.actor }} broke the build :(
+          text: Build failed            
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
   deploy_to_production:
     runs-on: ubuntu-20.04
-    needs: build_and_test
-    
+    needs: build_and_test    
     steps:
       - name: Simulate Failure Step
         run: exit 1
@@ -89,7 +87,7 @@ jobs:
           severity: error
           description: |
             commit
-            [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
+            ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
             by ${{ github.actor }} broke the build :(
           text: Build failed            
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
