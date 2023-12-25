@@ -63,6 +63,7 @@ jobs:
 
       - name: Notify on Success
         uses: rjstone/discord-webhook-notify@v1
+        needs: deploy_to_production
         if: success()
         with:
           severity: info          
