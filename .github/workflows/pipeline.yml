@@ -57,7 +57,6 @@ jobs:
   notify_on_deployment:
     runs-on: ubuntu-20.04
     needs: deploy_to_production
-    if: always()  # Ensure this job runs even if previous jobs fail
     steps:
       - name: Notify on Success
         uses: rjstone/discord-webhook-notify@v1
