@@ -46,14 +46,6 @@ jobs:
     runs-on: ubuntu-20.04
     needs: build_and_test    
     steps:
-      - name: COMMIT_MESSAGES
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
-        
-      - name: Check condition
-        run: echo "${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}"
-      
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
