@@ -1,3 +1,4 @@
+name: Health check
 on:
   push:
     branches:
@@ -10,6 +11,6 @@ jobs:
         uses: jtalk/url-health-check-action@v3
         with:
           #Check the following url
-          url: https://pokemon-app-4lxo.onrender.com
+          url: https://pokemon-app-4lxo.onrender.com/health
           max-attempts: 3
           retry-delay: 45s
