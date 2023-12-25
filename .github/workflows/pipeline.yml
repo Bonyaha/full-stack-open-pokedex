@@ -53,15 +53,9 @@ jobs:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
 
-      
-  notify_on_deployment:
-    runs-on: ubuntu-20.04
-    needs: deploy_to_production
-    steps:
       - name: Notify on Success
         uses: rjstone/discord-webhook-notify@v1
         if: success() && github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')
-
         with:
           severity: info
           description: to https://pokemon-app-4lxo.onrender.com/ by ${{github.triggering_actor}}
@@ -79,7 +73,7 @@ jobs:
             by ${{ github.actor }} broke the deployment :(
           text: Deployment failed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
+      
   tag_release:    
     runs-on: ubuntu-20.04
     needs: deploy_to_production    
