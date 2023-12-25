@@ -61,16 +61,22 @@ jobs:
           service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
 
+      
+  notify_on_deployment:
+    runs-on: ubuntu-20.04
+    needs: deploy_to_production
+    if: always()  # Ensure this job runs even if previous jobs fail
+    steps:
       - name: Notify on Success
         uses: rjstone/discord-webhook-notify@v1
         if: success()
         with:
-          severity: info          
+          severity: info
           description: to https://pokemon-app-4lxo.onrender.com/ by ${{github.triggering_actor}}
-          text: A new version of Pokedex deployed         
+          text: A new version of Pokedex deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-      - name: Notify on Failure
+      - name: Notify on Failure (Deployment)
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
@@ -79,9 +85,9 @@ jobs:
             commit
             ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
             by ${{ github.actor }} broke the deployment :(
-          text: Build failed            
+          text: Deployment failed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-          
+
   tag_release:    
     runs-on: ubuntu-20.04
     needs: deploy_to_production    
